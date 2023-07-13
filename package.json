@@ -4,5 +4,6 @@
   "description": "jitera assignment challenge",
   "main": "index.js",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "workspaces": ["apps/*"]
 }
