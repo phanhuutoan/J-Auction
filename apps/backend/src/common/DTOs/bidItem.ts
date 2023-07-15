@@ -4,3 +4,19 @@ export interface CreateBidItemDTO {
   // TODO: Testing purpose with minutes
   timeWindow: number;
 }
+
+export interface StartBidDTO {
+  bidItemId: number;
+  timeWindow: number;
+  createdById: number;
+}
+
+export interface BidInputData {
+  biddingUserId: number;
+  bidItemId: number;
+  price: number;
+}
+
+export interface BidAuctionDTO {
+  price: number;
+}

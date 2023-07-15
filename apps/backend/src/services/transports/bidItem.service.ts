@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BidItem } from 'src/entities/BidItem.entity';
-import { Repository } from 'typeorm';
+import { BidItem, BidItemStateEnum } from 'src/entities/BidItem.entity';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateBidItemDTO } from 'src/common/DTOs/bidItem';
+import { forOwn } from 'lodash';
 
+export interface IPossibleUpdateBidItemField {
+  title: string;
+  body: string;
+  state: BidItemStateEnum;
+  timeWindow: number;
+}
 @Injectable()
 export class BidItemService {
   constructor(
@@ -28,5 +35,30 @@ export class BidItemService {
         },
       ])
       .execute();
+  }
+
+  async getBidItems(whereOptions: FindOptionsWhere<BidItem>) {
+    return this.bidItemRepo.find({
+      where: whereOptions,
+    });
+  }
+
+  async getBidItemById(id: number) {
+    return this.bidItemRepo.findOneBy({ id });
+  }
+
+  async updateBidItem(
+    id: number,
+    possibleUpdateField: Partial<IPossibleUpdateBidItemField>,
+  ) {
+    const updateData: Record<string, number | string> = {};
+
+    forOwn(possibleUpdateField, (val, key) => {
+      updateData[key] = val;
+    });
+
+    await this.bidItemRepo.update(id, {
+      ...updateData,
+    });
   }
 }

@@ -17,6 +17,9 @@ import { UtilService } from './common/services/util.service';
 import { BidItemService } from './services/transports/bidItem.service';
 import { BidControllerService } from './services/controller/bidController.service';
 import { BidController } from './controllers/bid.controller';
+import { BidManagerService } from './services/business/bidManager.service';
+import { BidService } from './services/transports/bid.service';
+import { PreventedUserActionManager } from './services/business/PreventedUserAction.service';
 
 dotenv.config();
 const typeOrmModuleRoot = TypeOrmModule.forRoot({
@@ -42,6 +45,9 @@ const typeOrmModuleRoot = TypeOrmModule.forRoot({
     UtilService,
     BidItemService,
     BidControllerService,
+    BidManagerService,
+    BidService,
+    PreventedUserActionManager,
   ],
 })
 export class AppModule {}
