@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Patch,
   Req,
   UseGuards,
@@ -35,5 +36,14 @@ export class UserController {
     await this.userControllerService.updateUserBalance(updatedUserId, balance);
 
     return { status: ActionResultState.UPDATE_SUCCESS };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/bid-items')
+  async getMyBidItems(@Req() req: Request) {
+    const userId = await this.utilService.getUserIdFromToken(req);
+    const data = await this.userControllerService.getUserBidItems(userId);
+
+    return data;
   }
 }

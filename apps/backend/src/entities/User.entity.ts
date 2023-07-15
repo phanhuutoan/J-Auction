@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from './_BaseEntity';
-import { BidItem } from './BidItem';
+import { BidItem } from './BidItem.entity';
 
 @Entity()
 export class User extends BaseEntity {

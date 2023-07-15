@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignupInputDTO } from 'src/common/DTOs/auths';
-import { User } from 'src/entities/User';
-import { Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { AuthService } from '../business/auth.service';
 import { forOwn } from 'lodash';
+import { User } from 'src/entities/User.entity';
 
 export interface IPossibleUserUpdatedField {
   name?: string;
@@ -41,8 +41,16 @@ export class UserService {
     return await this.userRepo.findOneBy({ email });
   }
 
-  async getUserById(id: number): Promise<User | null> {
-    return await this.userRepo.findOneBy({ id });
+  async getUserDataById(
+    userId: number,
+    relations?: FindOptionsRelations<User>,
+  ) {
+    const data = await this.userRepo.findOne({
+      where: { id: userId },
+      relations,
+    });
+
+    return data;
   }
 
   async updateUser(

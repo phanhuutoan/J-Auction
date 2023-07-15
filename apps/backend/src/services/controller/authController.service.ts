@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { AuthService } from '../business/auth.service';
 import { UserService } from '../transports/user.service';
 import { SigninInputDTO, SignupInputDTO } from 'src/common/DTOs/auths';
@@ -28,7 +24,7 @@ export class AuthControllerService {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
-      throw new NotFoundException("The user doesn't exist yet");
+      throw new ForbiddenException("The user doesn't exist yet");
     }
 
     const compareResult = this.authService.comparePassword(

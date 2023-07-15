@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/business/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BidItem } from './entities/BidItem';
-import { Bid } from './entities/Bid';
-import { User } from './entities/User';
+import { BidItem } from './entities/BidItem.entity';
+import { Bid } from './entities/Bid.entity';
+import { User } from './entities/User.entity';
 
 import * as dotenv from 'dotenv';
 import { AuthController } from './controllers/auth.controller';
@@ -14,6 +14,9 @@ import { AuthControllerService } from './services/controller/authController.serv
 import { UserControllerService } from './services/controller/userController.service';
 import { UserController } from './controllers/user.controller';
 import { UtilService } from './common/services/util.service';
+import { BidItemService } from './services/transports/bidItem.service';
+import { BidControllerService } from './services/controller/bidController.service';
+import { BidController } from './controllers/bid.controller';
 
 dotenv.config();
 const typeOrmModuleRoot = TypeOrmModule.forRoot({
@@ -29,7 +32,7 @@ const typeOrmModuleRoot = TypeOrmModule.forRoot({
 
 @Module({
   imports: [typeOrmModuleRoot, TypeOrmModule.forFeature([BidItem, Bid, User])],
-  controllers: [AppController, AuthController, UserController],
+  controllers: [AppController, AuthController, UserController, BidController],
   providers: [
     AppService,
     AuthService,
@@ -37,6 +40,8 @@ const typeOrmModuleRoot = TypeOrmModule.forRoot({
     AuthControllerService,
     UserControllerService,
     UtilService,
+    BidItemService,
+    BidControllerService,
   ],
 })
 export class AppModule {}
