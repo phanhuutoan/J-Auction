@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { IRawBackupAuctionData } from './backupAuctionManager.service';
 
 export type UserId = number;
 export type CurrentWinner = { userId: UserId; highestPrice: number };
@@ -11,18 +12,26 @@ export type EndCallBack = (
 export class Auction {
   private endCallback: EndCallBack;
   private timeoutMinutes: number;
-  private timeOut: NodeJS.Timeout;
   private bidItemId: number;
   private _currentWinner: CurrentWinner = {
-    userId: null,
+    userId: 0,
     highestPrice: 0,
   };
   private joinedUserIdsSet = new Set<UserId>();
   private startTime: moment.Moment;
   private endTime: moment.Moment;
 
-  // FIXME: I use minutes to test
-  constructor(bidItemId: number, minutes: number, endCallback: EndCallBack) {
+  private timeout: NodeJS.Timeout;
+  private interval: NodeJS.Timer;
+
+  // FIXME: I use minutes to easily test
+  constructor(
+    bidItemId: number,
+    minutes: number,
+    endCallback: EndCallBack,
+    joinedUserId?: Set<UserId>,
+    currentWinner?: CurrentWinner,
+  ) {
     this.endCallback = endCallback;
     this.timeoutMinutes = minutes * 1000 * 60;
     this.bidItemId = bidItemId;
@@ -30,7 +39,15 @@ export class Auction {
     // FIXME: Minutes may be convert to hour when testing OK
     this.endTime = this.startTime.add(minutes, 'minutes');
 
-    setInterval(this.getRemainingTimes.bind(this), 10000);
+    if (joinedUserId) {
+      this.joinedUserIdsSet = joinedUserId;
+    }
+
+    if (currentWinner) {
+      this._currentWinner = currentWinner;
+    }
+
+    this.interval = setInterval(this.getRemainingTimes.bind(this), 5000);
 
     this.startAuction();
   }
@@ -48,13 +65,12 @@ export class Auction {
   public getRemainingTimes() {
     const currentTime = moment().valueOf();
     const remainingTime = this.endTime.valueOf() - currentTime;
+    const minutes = moment(remainingTime).minutes();
+    const seconds = moment(remainingTime).seconds();
 
-    console.log(
-      `REMAINING TIME of bidId ${this.bidItemId}`,
-      moment(remainingTime).format('hh:mm:ss'),
-    );
-
-    return moment(remainingTime);
+    const decimalMinutes = (minutes + seconds / 60).toFixed(2);
+    console.log('DECIMAL', decimalMinutes);
+    return decimalMinutes;
   }
 
   public checkHighestPrice(price: number) {
@@ -73,16 +89,25 @@ export class Auction {
     this.addJoinedUserId(userId);
   }
 
+  public getRawBackupData(): IRawBackupAuctionData {
+    return {
+      auctionId: this.bidItemId,
+      joinedUserIds: Array.from(this.joinedUserIdsSet),
+      currentWinner: this._currentWinner,
+      remainingTime: Number(this.getRemainingTimes()),
+    };
+  }
+
   private addJoinedUserId(joinedUserId: UserId) {
     this.joinedUserIdsSet.add(joinedUserId);
   }
 
   private startAuction() {
-    this.timeOut = setTimeout(() => {
+    this.timeout = setTimeout(() => {
       console.log(
-        `Auction id: ${
-          this.bidItemId
-        } just ended at ${Date.now().toLocaleString()}`,
+        `Auction id: ${this.bidItemId} just ended at ${moment().format(
+          'DD-MMM-YYYY HH:mm:ss',
+        )}`,
       );
       this.destroyTimer();
       this.endCallback(this.currentWinner, this.losedUserIds, this.bidItemId);
@@ -90,6 +115,7 @@ export class Auction {
   }
 
   private destroyTimer() {
-    clearTimeout(this.timeOut);
+    clearInterval(this.interval);
+    clearTimeout(this.timeout);
   }
 }

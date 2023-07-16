@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './_BaseEntity';
 import { User } from './User.entity';
+import { Bid } from './Bid.entity';
 
 export enum BidItemStateEnum {
   ONGOING = 'ongoing',
@@ -39,4 +40,7 @@ export class BidItem extends BaseEntity {
     foreignKeyConstraintName: 'FK_CREATED_USER',
   })
   createdBy: User;
+
+  @OneToMany(() => Bid, (bid) => bid.bidItem)
+  bids: Bid[];
 }

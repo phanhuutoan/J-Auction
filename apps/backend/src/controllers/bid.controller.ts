@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -34,7 +35,7 @@ export class BidController {
     private utilService: UtilService,
   ) {}
 
-  @Post()
+  @Post('/create')
   @UseGuards(AuthGuard)
   @UsePipes(new JoiValidationPipe(createBidItemSchema))
   async createBidItem(
@@ -90,5 +91,11 @@ export class BidController {
       status: ActionResultState.BID_AUCTION_SUCCESS,
       price: data.price,
     };
+  }
+
+  @Get('/:bidItemId/list')
+  @UseGuards(AuthGuard)
+  async getBidsList(@Param('bidItemId', new ParseIntPipe()) bidItemId: number) {
+    return this.bidControllerService.getBidListFromItem(bidItemId);
   }
 }

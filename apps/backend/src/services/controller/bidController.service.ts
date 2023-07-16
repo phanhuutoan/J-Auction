@@ -6,7 +6,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { BidItemStateEnum } from 'src/entities/BidItem.entity';
-import { BidManagerService } from '../business/bidManager.service';
+import { BidItemId, BidManagerService } from '../business/bidManager.service';
 import { PreventedUserActionManager } from '../business/PreventedUserAction.service';
 import { UserService } from '../transports/user.service';
 import { BidService } from '../transports/bid.service';
@@ -77,6 +77,10 @@ export class BidControllerService {
     } else if (checkResult instanceof UnprocessableEntityException) {
       throw checkResult;
     }
+  }
+
+  async getBidListFromItem(bidItemId: BidItemId) {
+    return this.bidItemService.getBidListOnBidItem(bidItemId);
   }
 
   private async deductUserBalance(bidInput: BidInputData) {

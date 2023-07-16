@@ -9,7 +9,7 @@ export class Bid extends BaseEntity {
   @JoinColumn({ name: 'userId', foreignKeyConstraintName: 'FK_USER_BID' })
   user: User;
 
-  @ManyToOne(() => BidItem, { onDelete: 'CASCADE' })
+  @ManyToOne(() => BidItem, (bidItem) => bidItem.bids, { onDelete: 'CASCADE' })
   @JoinColumn({
     name: 'bidItemId',
     foreignKeyConstraintName: 'FK_BID_ITEM_USER',

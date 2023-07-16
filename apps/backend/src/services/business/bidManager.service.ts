@@ -9,6 +9,7 @@ import { Auction, CurrentWinner, UserId } from './Auction';
 import { BidInputData } from 'src/common/DTOs/bidItem';
 import { BidService } from '../transports/bid.service';
 import { UserService } from '../transports/user.service';
+import { BackupAuctionManagerService } from './backupAuctionManager.service';
 
 export type BidItemId = number;
 
@@ -18,8 +19,43 @@ export class BidManagerService {
     private bidItemService: BidItemService,
     private bidService: BidService,
     private userService: UserService,
-  ) {}
+    private backupManagerService: BackupAuctionManagerService,
+  ) {
+    this.restoreBackupData().then(() => {
+      this.backupData();
+    });
+  }
+
   private onGoingAuctionMap = new Map<BidItemId, Auction>();
+  private readonly PERIOD_TIME_BACKUP = 5 * 1000;
+
+  private async backupData() {
+    setInterval(async () => {
+      const ongoingAuctions = Array.from(this.onGoingAuctionMap.values());
+      await this.backupManagerService.preriodicallyBackup(
+        ongoingAuctions.map((auction) => auction.getRawBackupData()),
+      );
+    }, this.PERIOD_TIME_BACKUP);
+  }
+
+  private async restoreBackupData() {
+    console.log('RESTORE!!');
+    const rawBackups = await this.backupManagerService.restoreBackup();
+
+    rawBackups.forEach((b) => {
+      const { auctionId, remainingTime, currentWinner, joinedUserIds } = b;
+      this.onGoingAuctionMap.set(
+        auctionId,
+        new Auction(
+          auctionId,
+          remainingTime,
+          this.actionEndtimeHanlder.bind(this),
+          new Set(joinedUserIds),
+          currentWinner,
+        ),
+      );
+    });
+  }
 
   async startAution(id: number, timeWindow: number) {
     await this.bidItemService.updateBidItem(id, {

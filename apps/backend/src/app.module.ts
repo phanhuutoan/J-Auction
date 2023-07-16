@@ -20,6 +20,9 @@ import { BidController } from './controllers/bid.controller';
 import { BidManagerService } from './services/business/bidManager.service';
 import { BidService } from './services/transports/bid.service';
 import { PreventedUserActionManager } from './services/business/PreventedUserAction.service';
+import { BackupAuction } from './entities/BackupAuction.entity';
+import { BackupAuctionService } from './services/transports/backupAuction.service';
+import { BackupAuctionManagerService } from './services/business/backupAuctionManager.service';
 
 dotenv.config();
 const typeOrmModuleRoot = TypeOrmModule.forRoot({
@@ -29,13 +32,16 @@ const typeOrmModuleRoot = TypeOrmModule.forRoot({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [BidItem, Bid, User],
+  entities: [BidItem, Bid, User, BackupAuction],
   logger: 'debug',
   synchronize: true,
 });
 
 @Module({
-  imports: [typeOrmModuleRoot, TypeOrmModule.forFeature([BidItem, Bid, User])],
+  imports: [
+    typeOrmModuleRoot,
+    TypeOrmModule.forFeature([BidItem, Bid, User, BackupAuction]),
+  ],
   controllers: [AppController, AuthController, UserController, BidController],
   providers: [
     AppService,
@@ -49,6 +55,8 @@ const typeOrmModuleRoot = TypeOrmModule.forRoot({
     BidManagerService,
     BidService,
     PreventedUserActionManager,
+    BackupAuctionService,
+    BackupAuctionManagerService,
   ],
 })
 export class AppModule {}

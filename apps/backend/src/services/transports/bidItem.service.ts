@@ -4,6 +4,7 @@ import { BidItem, BidItemStateEnum } from 'src/entities/BidItem.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateBidItemDTO } from 'src/common/DTOs/bidItem';
 import { forOwn } from 'lodash';
+import { BidItemId } from '../business/bidManager.service';
 
 export interface IPossibleUpdateBidItemField {
   title: string;
@@ -68,5 +69,14 @@ export class BidItemService {
         return userId.toString();
       },
     });
+  }
+
+  async getBidListOnBidItem(bidItemId: BidItemId) {
+    const bidItem = await this.bidItemRepo.findOne({
+      where: { id: bidItemId },
+      relations: { bids: { user: true } },
+    });
+
+    return bidItem.bids;
   }
 }
