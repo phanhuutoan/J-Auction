@@ -9,5 +9,6 @@ export const appDataSource = new DataSource({
   database: process.env.DB_NAME || 'postgres',
   migrations: ['./src/migrations/*.ts'],
   entities: ['./dist/**/**/*.entity.{js, ts}'],
+  logger: 'debug',
   synchronize: true,
 });

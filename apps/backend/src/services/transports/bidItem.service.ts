@@ -61,4 +61,12 @@ export class BidItemService {
       ...updateData,
     });
   }
+
+  async updateWinner(bidItemId: number, userId: number) {
+    await this.bidItemRepo.update(bidItemId, {
+      winner() {
+        return userId.toString();
+      },
+    });
+  }
 }

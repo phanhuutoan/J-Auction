@@ -30,6 +30,7 @@ const typeOrmModuleRoot = TypeOrmModule.forRoot({
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   entities: [BidItem, Bid, User],
+  logger: 'debug',
   synchronize: true,
 });
 

@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignupInputDTO } from 'src/common/DTOs/auths';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, In, Repository } from 'typeorm';
 import { AuthService } from '../business/auth.service';
-import { forOwn } from 'lodash';
+import { forOwn, isNil } from 'lodash';
 import { User } from 'src/entities/User.entity';
+import { UserId } from '../business/Auction';
 
 export interface IPossibleUserUpdatedField {
   name?: string;
@@ -58,10 +59,25 @@ export class UserService {
     possibleUpdateField?: IPossibleUserUpdatedField,
   ) {
     forOwn(possibleUpdateField, (val, key: keyof IPossibleUserUpdatedField) => {
-      val && (user[key] = val);
+      !isNil(val) && (user[key] = val);
     });
 
     await this.userRepo.save(user);
+  }
+
+  async getManyUsers(userIds: UserId[]) {
+    return this.userRepo.find({ where: { id: In(userIds) } });
+  }
+
+  async updateManyUsers(
+    users: User[],
+    possibleUpdateFields?: IPossibleUserUpdatedField[],
+  ) {
+    const promises = users.map((user, index) => {
+      return this.userRepo.update(user.id, possibleUpdateFields[index]);
+    });
+
+    return Promise.all(promises);
   }
 
   private checkUserExist(email: string) {

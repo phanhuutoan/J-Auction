@@ -16,6 +16,6 @@ export class Bid extends BaseEntity {
   })
   bidItem: BidItem;
 
-  @Column({ type: 'int', default: 1 })
+  @Column({ type: 'decimal', default: 1 })
   price: number;
 }

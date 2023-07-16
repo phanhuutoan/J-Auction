@@ -13,7 +13,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar' })
   email: string;
 
-  @Column({ type: 'decimal', default: 0 })
+  @Column({ type: 'numeric', default: 0 })
   balance: number;
 
   @OneToMany(() => BidItem, (bidItem) => bidItem.createdBy)

@@ -1,6 +1,10 @@
 import { BidInputData, CreateBidItemDTO } from 'src/common/DTOs/bidItem';
 import { BidItemService } from '../transports/bidItem.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { BidItemStateEnum } from 'src/entities/BidItem.entity';
 import { BidManagerService } from '../business/bidManager.service';
 import { PreventedUserActionManager } from '../business/PreventedUserAction.service';
@@ -60,28 +64,43 @@ export class BidControllerService {
       this.userActionManager.setPreventUser(biddingUserId, bidItemId);
     }
 
-    const isHighestPrice =
-      this.bidManagerService.checkIfUserBidHighestPrice(bidInput);
+    const checkResult = this.bidManagerService.checkHighestPrice(bidInput);
 
-    if (isHighestPrice) {
-      await this.bidManagerService.createBidOnAuction(bidInput);
+    if (checkResult === true) {
+      // This order here is important
+      // check balance of user and decuce it first
       await this.deductUserBalance(bidInput);
+      // change the highest price
+      this.bidManagerService.addHighestPrice(bidInput);
+      // create a bid in DB
+      await this.bidService.create(bidInput);
+    } else if (checkResult instanceof UnprocessableEntityException) {
+      throw checkResult;
     }
   }
 
   private async deductUserBalance(bidInput: BidInputData) {
     const { bidItemId, biddingUserId, price } = bidInput;
+    const biddingUser = await this.userService.getUserDataById(biddingUserId);
+
     const highestBidFromUser =
       await this.bidService.getHighestBidFromUserOnBidItem(
         biddingUserId,
         bidItemId,
       );
 
-    const deductedPrice = price - highestBidFromUser.price;
-    const biddingUser = await this.userService.getUserDataById(biddingUserId);
+    let highestPriceOfUser = 0;
+    if (highestBidFromUser) {
+      highestPriceOfUser = highestBidFromUser.price;
+    }
+    const deductedPrice = price - highestPriceOfUser;
+    if (biddingUser.balance < deductedPrice) {
+      throw new BadRequestException(
+        'Your balance is insufficent. Please, deposit first!',
+      );
+    }
 
     const newBalance = biddingUser.balance - deductedPrice;
-
     await this.userService.updateUser(biddingUser, { balance: newBalance });
   }
 }

@@ -26,6 +26,13 @@ export class BidItem extends BaseEntity {
   @Column({ type: 'int', default: 1 })
   timeWindow: number;
 
+  @ManyToOne(() => User)
+  @JoinColumn({
+    name: 'winnerId',
+    foreignKeyConstraintName: 'FK_WINNER',
+  })
+  winner: User;
+
   @ManyToOne(() => User, (user) => user.bidItems)
   @JoinColumn({
     name: 'createdById',

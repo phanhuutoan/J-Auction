@@ -6,8 +6,9 @@ import {
 import { BidItemService } from '../transports/bidItem.service';
 import { BidItemStateEnum } from 'src/entities/BidItem.entity';
 import { Auction, CurrentWinner, UserId } from './Auction';
-import { BidService } from '../transports/bid.service';
 import { BidInputData } from 'src/common/DTOs/bidItem';
+import { BidService } from '../transports/bid.service';
+import { UserService } from '../transports/user.service';
 
 export type BidItemId = number;
 
@@ -16,6 +17,7 @@ export class BidManagerService {
   constructor(
     private bidItemService: BidItemService,
     private bidService: BidService,
+    private userService: UserService,
   ) {}
   private onGoingAuctionMap = new Map<BidItemId, Auction>();
 
@@ -38,27 +40,27 @@ export class BidManagerService {
     });
   }
 
-  async createBidOnAuction(bidInput: BidInputData) {
-    const { bidItemId } = bidInput;
+  checkHighestPrice(bidInput: BidInputData) {
+    const { bidItemId, price } = bidInput;
     const auction = this.getOngoingAuction(bidItemId);
 
-    const isHighestResult = this.checkIfUserBidHighestPrice(bidInput);
+    const result = auction.checkHighestPrice(price);
 
-    if (isHighestResult) {
-      await this.bidService.create(bidInput);
+    if (result) {
+      return true;
     } else {
       const highestPrice = auction.currentWinner.highestPrice;
-      throw new UnprocessableEntityException(
+      return new UnprocessableEntityException(
         `Your price is not the highest one, the current highest price is $"${highestPrice}". Please, try again!`,
       );
     }
   }
 
-  checkIfUserBidHighestPrice(bidInput: BidInputData) {
-    const { bidItemId, biddingUserId, price } = bidInput;
+  addHighestPrice(bidInput: BidInputData) {
+    const { bidItemId, price, biddingUserId } = bidInput;
     const auction = this.getOngoingAuction(bidItemId);
 
-    return auction.checkAndBidHighestPrice(biddingUserId, price);
+    auction.addHighestPrice(biddingUserId, price);
   }
 
   getRemainingTimeFromAuction(id: BidItemId) {
@@ -84,9 +86,35 @@ export class BidManagerService {
     losedUserIds: UserId[],
     bidId: number,
   ) {
-    console.log('Winner', currentWinner);
-    console.log('LosedUserId', losedUserIds);
-    await this.stopAuction(bidId);
+    await Promise.all([
+      this.bidItemService.updateWinner(bidId, currentWinner.userId),
+      this.sendBackMoneyToLosedUser(losedUserIds, bidId),
+      this.stopAuction(bidId),
+    ]);
     this.onGoingAuctionMap.delete(bidId);
+  }
+
+  private async sendBackMoneyToLosedUser(userIds: UserId[], bidId: BidItemId) {
+    const userMoneyData = await this.bidService.getMoneyLosedUserBidInAuction(
+      userIds,
+      bidId,
+    );
+    const userMoneyDataMap = new Map(
+      userMoneyData.map((data) => [data.userId, data.maxprice]),
+    );
+    const moneyBackUsers = await this.userService.getManyUsers(
+      userMoneyData.map((u) => u.userId),
+    );
+
+    const updatedUserBalances = moneyBackUsers.map((user) => {
+      const moneyUserHasBid = userMoneyDataMap.get(user.id);
+      const newBalance = Number(user.balance) + Number(moneyUserHasBid);
+
+      return {
+        balance: newBalance,
+      };
+    });
+
+    await this.userService.updateManyUsers(moneyBackUsers, updatedUserBalances);
   }
 }

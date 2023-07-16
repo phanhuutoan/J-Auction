@@ -88,6 +88,7 @@ export class BidController {
     });
     return {
       status: ActionResultState.BID_AUCTION_SUCCESS,
+      price: data.price,
     };
   }
 }

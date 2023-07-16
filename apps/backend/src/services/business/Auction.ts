@@ -57,14 +57,20 @@ export class Auction {
     return moment(remainingTime);
   }
 
-  public checkAndBidHighestPrice(userId: UserId, price: number) {
-    this.addJoinedUserId(userId);
+  public checkHighestPrice(price: number) {
     if (price > this._currentWinner.highestPrice) {
-      this._currentWinner = { userId, highestPrice: price };
       return true;
     } else {
       return false;
     }
+  }
+
+  public addHighestPrice(userId: UserId, price: number) {
+    this._currentWinner = {
+      highestPrice: price,
+      userId,
+    };
+    this.addJoinedUserId(userId);
   }
 
   private addJoinedUserId(joinedUserId: UserId) {

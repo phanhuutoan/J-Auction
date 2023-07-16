@@ -3,7 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BidInputData } from 'src/common/DTOs/bidItem';
 import { Bid } from 'src/entities/Bid.entity';
 import { Repository } from 'typeorm';
+import { UserId } from '../business/Auction';
 
+export interface GroupDataUserMoney {
+  userId: number;
+  maxprice: string;
+}
 @Injectable()
 export class BidService {
   constructor(
@@ -32,14 +37,27 @@ export class BidService {
   async getHighestBidFromUserOnBidItem(userId: number, bidItemId: number) {
     return this.bidRepo
       .createQueryBuilder('bid')
-      .select(['price', 'userId', 'bidItemId'])
+      .select(['bid.price', 'bid.userId', 'bid.bidItemId'])
       .where('bid.userId = :userId AND bid.bidItemId = :bidItemId', {
         userId,
         bidItemId,
       })
-      .orderBy({
-        price: 'DESC',
-      })
+      .orderBy('bid.price', 'DESC')
       .getOne();
+  }
+
+  async getMoneyLosedUserBidInAuction(
+    losedUserIds: UserId[],
+    bidItemId: number,
+  ) {
+    const data = await this.bidRepo
+      .createQueryBuilder('bid')
+      .select(['bid.userId', 'MAX(bid.price) as maxprice'])
+      .where('bid.userId IN (:...losedUserIds)', { losedUserIds })
+      .andWhere('bid.bidItemId = :bidItemId', { bidItemId })
+      .groupBy('bid.userId')
+      .getRawMany();
+
+    return data as GroupDataUserMoney[];
   }
 }
