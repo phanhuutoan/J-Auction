@@ -1,3 +1,4 @@
 apps/backend/node_modules
 apps/backend/data
 node_modules
+apps/backend/.env

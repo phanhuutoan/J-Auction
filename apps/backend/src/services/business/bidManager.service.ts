@@ -29,34 +29,6 @@ export class BidManagerService {
   private onGoingAuctionMap = new Map<BidItemId, Auction>();
   private readonly PERIOD_TIME_BACKUP = 5 * 1000;
 
-  private async backupData() {
-    setInterval(async () => {
-      const ongoingAuctions = Array.from(this.onGoingAuctionMap.values());
-      await this.backupManagerService.preriodicallyBackup(
-        ongoingAuctions.map((auction) => auction.getRawBackupData()),
-      );
-    }, this.PERIOD_TIME_BACKUP);
-  }
-
-  private async restoreBackupData() {
-    console.log('RESTORE!!');
-    const rawBackups = await this.backupManagerService.restoreBackup();
-
-    rawBackups.forEach((b) => {
-      const { auctionId, remainingTime, currentWinner, joinedUserIds } = b;
-      this.onGoingAuctionMap.set(
-        auctionId,
-        new Auction(
-          auctionId,
-          remainingTime,
-          this.actionEndtimeHanlder.bind(this),
-          new Set(joinedUserIds),
-          currentWinner,
-        ),
-      );
-    });
-  }
-
   async startAution(id: number, timeWindow: number) {
     await this.bidItemService.updateBidItem(id, {
       state: BidItemStateEnum.ONGOING,
@@ -102,7 +74,11 @@ export class BidManagerService {
   getRemainingTimeFromAuction(id: BidItemId) {
     const auction = this.getOngoingAuction(id);
 
-    return auction.getRemainingTimes().valueOf();
+    return auction.getRemainingTimes();
+  }
+
+  getAllOnGoingAuctions() {
+    return this.onGoingAuctionMap;
   }
 
   private getOngoingAuction(id: BidItemId) {
@@ -115,6 +91,34 @@ export class BidManagerService {
     }
 
     return auction;
+  }
+
+  private async backupData() {
+    setInterval(async () => {
+      const ongoingAuctions = Array.from(this.onGoingAuctionMap.values());
+      await this.backupManagerService.preriodicallyBackup(
+        ongoingAuctions.map((auction) => auction.getRawBackupData()),
+      );
+    }, this.PERIOD_TIME_BACKUP);
+  }
+
+  private async restoreBackupData() {
+    console.log('RESTORE!!');
+    const rawBackups = await this.backupManagerService.restoreBackup();
+
+    rawBackups.forEach((b) => {
+      const { auctionId, remainingTime, currentWinner, joinedUserIds } = b;
+      this.onGoingAuctionMap.set(
+        auctionId,
+        new Auction(
+          auctionId,
+          remainingTime,
+          this.actionEndtimeHanlder.bind(this),
+          new Set(joinedUserIds),
+          currentWinner,
+        ),
+      );
+    });
   }
 
   private async actionEndtimeHanlder(

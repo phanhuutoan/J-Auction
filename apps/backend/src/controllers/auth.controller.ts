@@ -14,11 +14,9 @@ export class AuthController {
   @Post('/signup')
   @UsePipes(new JoiValidationPipe(signupValidationSchema))
   async signUp(@Body() signupInput: SignupInputDTO) {
-    const token = await this.authControllerService.signup(signupInput);
+    const userData = await this.authControllerService.signup(signupInput);
 
-    return {
-      token,
-    };
+    return userData;
   }
 
   @Post('/signIn')

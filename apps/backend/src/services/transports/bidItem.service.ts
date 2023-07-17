@@ -21,7 +21,7 @@ export class BidItemService {
 
   async create(userId: number, bidItemInput: CreateBidItemDTO) {
     const { timeWindow, title, body } = bidItemInput;
-    await this.bidItemRepo
+    return this.bidItemRepo
       .createQueryBuilder('bidItem')
       .insert()
       .into(BidItem)

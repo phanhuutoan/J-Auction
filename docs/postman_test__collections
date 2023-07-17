@@ -1,0 +1,467 @@
+{
+	"info": {
+		"_postman_id": "563cd223-1bad-46e9-b39b-634adfa992ad",
+		"name": "Jitera test app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6049592"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"tony2@gmail.com\",\r\n    \"password\": \"Toan1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/auth/signin",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"zed@gmail.com\",\r\n    \"password\": \"Toan1234\",\r\n    \"userName\": \"Zed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/auth/signup",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://{{url}}/healthz",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/healthz-auth",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"healthz-auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Balance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"balance\": 200\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/user/balance",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bids",
+			"item": [
+				{
+					"name": "create bid item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"A Teaspoon 22\",\r\n    \"body\": \"tea from micheal Mr Tommy 15\",\r\n    \"timeWindow\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bid/create",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bid",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "my bid items",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/user/bid-items",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"bid-items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "start bid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bidItemId\": 10,\r\n    \"createdById\": 3,\r\n    \"timeWindow\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bid/start",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bid",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get bid list on item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bid/28/list",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bid",
+								"28",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auction bid",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": 200\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bid/28",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bid",
+								"28"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bids Copy",
+			"item": [
+				{
+					"name": "create bid item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"A Teaspoon 22\",\r\n    \"body\": \"tea from micheal Mr Tommy 15\",\r\n    \"timeWindow\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bid/create",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bid",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "my bid items",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/user/bid-items",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"bid-items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "start bid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bidItemId\": 10,\r\n    \"createdById\": 3,\r\n    \"timeWindow\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bid/start",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bid",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bid on auction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": 750\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bid/28",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bid",
+								"28"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

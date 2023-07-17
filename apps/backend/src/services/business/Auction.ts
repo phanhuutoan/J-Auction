@@ -47,7 +47,7 @@ export class Auction {
       this._currentWinner = currentWinner;
     }
 
-    this.interval = setInterval(this.getRemainingTimes.bind(this), 5000);
+    // this.interval = setInterval(this.getRemainingTimes.bind(this), 10000); // FOR DEBUG PURPOSE
 
     this.startAuction();
   }
@@ -69,7 +69,7 @@ export class Auction {
     const seconds = moment(remainingTime).seconds();
 
     const decimalMinutes = (minutes + seconds / 60).toFixed(2);
-    console.log('DECIMAL', decimalMinutes);
+    // console.log('DECIMAL', decimalMinutes); // FOR DEBUG PURPOSE
     return decimalMinutes;
   }
 

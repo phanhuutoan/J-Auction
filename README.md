@@ -12,7 +12,20 @@
 2. Image:
 <img src="images/db-diagram.png">
 
-### 1.3 Backend architecture
-1. Visit [Database-overal-architecture](https://drive.google.com/file/d/1BkFiQJYe7gBx9fIgntwrFPdf5YmuH_aC/view?usp=sharing)
+### 1.3 Backend overal architecture
+1. Visit [overal-backend-architecture](https://drive.google.com/file/d/1BkFiQJYe7gBx9fIgntwrFPdf5YmuH_aC/view?usp=sharing)
 2. Diagrams:
 <img src="images/BE-overal.png">
+
+### 1.4 Backend detail architecture
+The architecture of other parts are easy to understand so I will show the core part of our app: **Auction system**
+1. Patterns using: Repository pattern, Dependency Injection, factory pattern.
+2. Architecture of auction system: [diagram link](https://drive.google.com/file/d/1BkFiQJYe7gBx9fIgntwrFPdf5YmuH_aC/view?usp=sharing)
+3. <img src="images/BE-detail.png">
+
+### 1.5 Backend setup locally
+Please read [Backend instructon: docs/Backend-instruction.md](docs/Backend-instruction.md)
+
+---
+
+**NOTE**: In this project (**master** branch) I use minutes as a smallest time unit instead of hour so we can easily to test it, we can change it to hour version when everything become stable effortlessly

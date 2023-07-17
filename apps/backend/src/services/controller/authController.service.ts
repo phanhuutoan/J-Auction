@@ -13,10 +13,13 @@ export class AuthControllerService {
   async signup(signupInput: SignupInputDTO) {
     const user = await this.userService.createUser(signupInput);
 
-    return this.authService.generateJwtToken({
+    return {
+      token: this.authService.generateJwtToken({
+        userId: user.id,
+        userEmail: user.email,
+      }),
       userId: user.id,
-      userEmail: user.email,
-    });
+    };
   }
 
   async signin(signinInput: SigninInputDTO) {
