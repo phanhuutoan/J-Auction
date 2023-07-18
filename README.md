@@ -29,3 +29,7 @@ Please read [Backend instructon: docs/Backend-instruction.md](docs/Backend-instr
 ---
 
 **NOTE**: In this project (**master** branch) I use minutes as a smallest time unit instead of hour so we can easily to test it, we can change it to hour version when everything become stable effortlessly
+
+---
+
+### 1.6 Frontend overal architecture
