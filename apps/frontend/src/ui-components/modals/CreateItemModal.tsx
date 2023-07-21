@@ -16,19 +16,21 @@ import { useForm } from "react-hook-form";
 interface CreateItemModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit(data: CreateItemFormData): void;
 }
 
-type FormData = {
+export type CreateItemFormData = {
   name: string;
+  body: string;
   startPrice: number;
   timeWindow: number;
 };
 function CreateItemModal(props: CreateItemModalProps) {
-  const { isOpen, onClose } = props;
-  const { register, handleSubmit } = useForm<FormData>();
+  const { isOpen, onClose, onSubmit } = props;
+  const { register, handleSubmit } = useForm<CreateItemFormData>();
 
-  function _onSubmit(data: FormData) {
-    console.log("Data", data);
+  function _onSubmit(data: CreateItemFormData) {
+    onSubmit(data);
   }
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -41,6 +43,10 @@ function CreateItemModal(props: CreateItemModalProps) {
             <FormControl mb={4}>
               <FormLabel>Item name</FormLabel>
               <Input type="text" {...register("name")} required />
+            </FormControl>
+            <FormControl mb={4}>
+              <FormLabel>Item body</FormLabel>
+              <Input type="text" {...register("body")} required />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Start price</FormLabel>

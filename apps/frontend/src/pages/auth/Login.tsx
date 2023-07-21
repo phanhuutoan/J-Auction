@@ -34,6 +34,10 @@ function LoginPage() {
       setLoading(false);
     });
   };
+  useEffect(() => {
+    authStore.autoSignin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (authStore.token) {

@@ -3,33 +3,38 @@ import { CommonEnum } from "../common/constant";
 import CommonLayout from "../ui-components/Layouts";
 import GridHeader from "../ui-components/grids-item/GridHeader";
 import GridRow from "../ui-components/grids-item/GridRow";
-import CreateItemModal from "../ui-components/modals/CreateItemPrice";
+import CreateItemModal, {
+  CreateItemFormData,
+} from "../ui-components/modals/CreateItemModal";
+import { useGetStore } from "../stores-sdk";
+import { useEffect } from "react";
+import { observer } from "mobx-react-lite";
 
 function CreateItemPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { userStore } = useGetStore();
+
   const headersItem = [
+    "ID",
     "Item name",
     "state",
     "time window",
     "started price",
     "Publish",
   ];
-  const rows: Array<[string, string, string, string, JSX.Element]> = [
-    [
-      "A Fan",
-      "private",
-      "4 minutes",
-      "$50",
-      <Button colorScheme="orange">Publish</Button>,
-    ],
-    [
-      "A pencil",
-      "private",
-      "4 minutes",
-      "$100",
-      <Button colorScheme="orange">Publish</Button>,
-    ],
-  ];
+
+  function _onCreateItem(data: CreateItemFormData) {
+    const { name, ...rest } = data;
+    userStore.createBidItem({
+      title: name,
+      ...rest,
+    });
+  }
+
+  useEffect(() => {
+    userStore.getMyBidItemRow();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <CommonLayout>
       <Box>
@@ -42,16 +47,20 @@ function CreateItemPage() {
 
           <Box>
             <GridHeader items={headersItem} />
-            {rows.map((row) => (
+            {userStore.bidItemRows.map((row) => (
               <GridRow key={row[0]} items={row} />
             ))}
           </Box>
         </Container>
 
-        <CreateItemModal isOpen={isOpen} onClose={onClose} />
+        <CreateItemModal
+          onSubmit={_onCreateItem}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
       </Box>
     </CommonLayout>
   );
 }
 
-export default CreateItemPage;
+export default observer(CreateItemPage);

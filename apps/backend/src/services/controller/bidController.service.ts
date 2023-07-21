@@ -38,14 +38,28 @@ export class BidControllerService {
   }
 
   async updateStateOfBidItem(
-    id: number,
-    timeWindow: number,
+    bidItemId: number,
+    triggerUserId: number,
     state: BidItemStateEnum,
   ) {
+    const bidItem = await this.bidItemService.getBidItemById(bidItemId, {
+      createdBy: true,
+    });
+
+    if (bidItem.createdBy.id !== triggerUserId) {
+      throw new BadRequestException(
+        "You cannot start auction that you don't own",
+      );
+    }
+
     if (state === BidItemStateEnum.ONGOING) {
-      await this.bidManagerService.startAution(id, timeWindow);
+      await this.bidManagerService.startAution(
+        Number(bidItemId),
+        bidItem.timeWindow,
+        bidItem.startPrice,
+      );
     } else if (state === BidItemStateEnum.COMPLETED) {
-      await this.bidManagerService.stopAuction(id);
+      await this.bidManagerService.stopAuction(bidItem.id);
     }
   }
 

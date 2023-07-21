@@ -29,7 +29,7 @@ export class BidManagerService {
   private onGoingAuctionMap = new Map<BidItemId, Auction>();
   private readonly PERIOD_TIME_BACKUP = 5 * 1000;
 
-  async startAution(id: number, timeWindow: number) {
+  async startAution(id: number, timeWindow: number, startPrice: number) {
     await this.bidItemService.updateBidItem(id, {
       state: BidItemStateEnum.ONGOING,
     });
@@ -37,6 +37,11 @@ export class BidManagerService {
       id,
       timeWindow,
       this.actionEndtimeHanlder.bind(this),
+      new Set(),
+      {
+        userId: 0,
+        highestPrice: startPrice,
+      },
     );
 
     this.onGoingAuctionMap.set(id, auction);
@@ -95,6 +100,9 @@ export class BidManagerService {
 
   private async backupData() {
     setInterval(async () => {
+      if (this.onGoingAuctionMap.size === 0) {
+        return;
+      }
       const ongoingAuctions = Array.from(this.onGoingAuctionMap.values());
       await this.backupManagerService.preriodicallyBackup(
         ongoingAuctions.map((auction) => auction.getRawBackupData()),

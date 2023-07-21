@@ -24,6 +24,14 @@ export class UserController {
   ) {}
 
   @UseGuards(AuthGuard)
+  @Get()
+  async getUser(@Req() req: Request) {
+    const userId = await this.utilService.getUserIdFromToken(req);
+
+    return this.userControllerService.getUserById(userId);
+  }
+
+  @UseGuards(AuthGuard)
   @Patch('/balance')
   @UsePipes(new JoiValidationPipe(updateBalanceValidationSchema))
   async updateBalance(

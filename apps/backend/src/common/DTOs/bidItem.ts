@@ -3,6 +3,7 @@ export interface CreateBidItemDTO {
   body: string;
   // TODO: Testing purpose with minutes
   timeWindow: number;
+  startPrice: number;
 }
 
 export interface StartBidDTO {

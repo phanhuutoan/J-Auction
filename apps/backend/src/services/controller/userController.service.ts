@@ -7,7 +7,8 @@ export class UserControllerService {
 
   async updateUserBalance(userId: number, addedBalance: number) {
     const user = await this.userService.getUserDataById(userId);
-    const newBalance = +user.balance + addedBalance;
+    // Sometime the validator convert fail so we have to make sure it's a number
+    const newBalance = +user.balance + Number(addedBalance);
 
     await this.userService.updateUser(user, { balance: newBalance });
   }
@@ -17,5 +18,12 @@ export class UserControllerService {
       bidItems: true,
     });
     return user.bidItems;
+  }
+
+  async getUserById(userId: number) {
+    const data = await this.userService.getUserDataById(userId);
+
+    delete data.password;
+    return data;
   }
 }

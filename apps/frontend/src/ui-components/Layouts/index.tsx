@@ -45,12 +45,12 @@ function CommonLayout(props: CommonLayoutProps) {
           </Text>
         </Link>
         <Flex alignItems={"center"}>
-          <Box mr="1.5rem">
+          <Box mr="1.5rem" textAlign={"right"}>
             <Text>
               Balance:{" "}
-              <strong>#{userStore.currentUser?.balance || "N/A"}</strong>
+              <strong>${userStore.currentUser?.balance || "N/A"}</strong>
             </Text>
-            <Text fontWeight={"500"}>
+            <Text fontWeight={"500"} textTransform={"uppercase"}>
               {userStore.currentUser?.userName || "N/A"}{" "}
             </Text>
           </Box>
@@ -59,6 +59,9 @@ function CommonLayout(props: CommonLayoutProps) {
               <Avatar cursor={"pointer"} src={avatarSrc} size={"md"} />
             </MenuButton>
             <MenuList color={"black"}>
+              <Link to="/">
+                <MenuItem>Home</MenuItem>
+              </Link>
               {authStore.token ? (
                 <Fragment>
                   <Link to="/create-item">

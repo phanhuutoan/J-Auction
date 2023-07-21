@@ -50,6 +50,10 @@ export class BidService {
     losedUserIds: UserId[],
     bidItemId: number,
   ) {
+    if (losedUserIds.length === 0) {
+      return [];
+    }
+
     const data = await this.bidRepo
       .createQueryBuilder('bid')
       .select(['bid.userId', 'MAX(bid.price) as maxprice'])

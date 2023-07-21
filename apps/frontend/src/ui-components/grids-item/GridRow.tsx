@@ -14,7 +14,7 @@ function GridRow(props: GridRowProps) {
       {...props}
     >
       {items.map((item) => (
-        <GridItem key="item">
+        <GridItem key={item}>
           <Text>{item}</Text>
         </GridItem>
       ))}

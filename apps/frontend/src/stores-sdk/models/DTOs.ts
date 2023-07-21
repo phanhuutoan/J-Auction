@@ -10,3 +10,10 @@ export interface SignupDTO extends SigninDTO {
 export interface AuthResponseDTO {
   token: string;
 }
+
+export interface CreateItemDTO {
+  title: string;
+  body: string;
+  startPrice: number;
+  timeWindow: number;
+}

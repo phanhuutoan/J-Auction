@@ -10,22 +10,33 @@ import {
 } from "@chakra-ui/react";
 import CommonLayout from "../ui-components/Layouts";
 import { useForm } from "react-hook-form";
+import { useGetStore } from "../stores-sdk";
+import { useState } from "react";
+import { observer } from "mobx-react-lite";
 
 type FormData = {
   balance: number;
 };
 
 function DepositPage() {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, resetField } = useForm<FormData>();
+  const { userStore } = useGetStore();
+  const [loading, setLoading] = useState<boolean>(false);
+
   function _onSubmit(data: FormData) {
-    console.log("Data", data);
+    setLoading(true);
+    userStore.updateBalance(data.balance).finally(() => {
+      setLoading(false);
+      resetField("balance");
+    });
   }
   return (
     <CommonLayout>
       <Container maxW={"50rem"}>
         <Box my="2rem">
           <Text color="blue.600" fontSize={"1.8rem"}>
-            Current balance <strong>$1000</strong>
+            Current balance{" "}
+            <strong>${userStore.currentUser?.balance || 0}</strong>
           </Text>
         </Box>
         <form onSubmit={handleSubmit(_onSubmit)}>
@@ -34,7 +45,13 @@ function DepositPage() {
             <Input type="number" {...register("balance")} required />
           </FormControl>
           <Flex>
-            <Button colorScheme="green" mt="1rem" ml="auto">
+            <Button
+              type="submit"
+              isLoading={loading}
+              colorScheme="green"
+              mt="1rem"
+              ml="auto"
+            >
               Deposit
             </Button>
           </Flex>
@@ -44,4 +61,4 @@ function DepositPage() {
   );
 }
 
-export default DepositPage;
+export default observer(DepositPage);

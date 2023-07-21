@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BidItem, BidItemStateEnum } from 'src/entities/BidItem.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
 import { CreateBidItemDTO } from 'src/common/DTOs/bidItem';
 import { forOwn } from 'lodash';
 import { BidItemId } from '../business/bidManager.service';
@@ -20,7 +20,7 @@ export class BidItemService {
   ) {}
 
   async create(userId: number, bidItemInput: CreateBidItemDTO) {
-    const { timeWindow, title, body } = bidItemInput;
+    const { timeWindow, title, body, startPrice } = bidItemInput;
     return this.bidItemRepo
       .createQueryBuilder('bidItem')
       .insert()
@@ -30,6 +30,7 @@ export class BidItemService {
           timeWindow,
           title,
           body,
+          startPrice,
           createdBy() {
             return userId.toString();
           },
@@ -44,8 +45,8 @@ export class BidItemService {
     });
   }
 
-  async getBidItemById(id: number) {
-    return this.bidItemRepo.findOneBy({ id });
+  async getBidItemById(id: number, relations: FindOptionsRelations<BidItem>) {
+    return this.bidItemRepo.findOne({ where: { id }, relations });
   }
 
   async updateBidItem(
@@ -64,6 +65,9 @@ export class BidItemService {
   }
 
   async updateWinner(bidItemId: number, userId: number) {
+    if (!userId) {
+      return;
+    }
     await this.bidItemRepo.update(bidItemId, {
       winner() {
         return userId.toString();
