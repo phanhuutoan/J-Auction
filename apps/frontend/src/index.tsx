@@ -5,6 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes";
 import { theme } from "./themes";
+import { RootStoreProvider } from "./stores-sdk";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,7 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <ChakraProvider theme={theme}>
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <RootStoreProvider>
+        <RouterProvider router={router} />
+      </RootStoreProvider>
     </React.StrictMode>
   </ChakraProvider>
 );

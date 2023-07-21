@@ -4,7 +4,7 @@ import SignupPage from "../pages/auth/Signup";
 import LoginPage from "../pages/auth/Login";
 import CreateItemPage from "../pages/CreateBidItem";
 import DepositPage from "../pages/Deposit";
-import BidOnAuctionPage from "../pages/BidOnAuction";
+import AuctionDetails from "../pages/AuctionDetails";
 import Page404 from "../pages/others/404";
 
 const router = createBrowserRouter([
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
     element: <DepositPage />,
   },
   {
-    path: "/auction-bid",
-    element: <BidOnAuctionPage />,
+    path: "/:bidItemId/bids",
+    element: <AuctionDetails />,
   },
   {
     path: "*",

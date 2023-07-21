@@ -12,6 +12,10 @@ import {} from "../../";
 import { LayerStyleToken } from "../../themes/tokens";
 import { useForm } from "react-hook-form";
 import AppLink from "../../ui-components/AppLink";
+import { useGetStore } from "../../stores-sdk";
+import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export type FormData = {
   email: string;
@@ -20,13 +24,26 @@ export type FormData = {
 
 function LoginPage() {
   const { register, handleSubmit } = useForm<FormData>();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { authStore } = useGetStore();
 
   const _onSubmit = (data: FormData) => {
-    console.log("Data", data);
+    setLoading(true);
+    authStore.signin(data).finally(() => {
+      setLoading(false);
+    });
   };
 
+  useEffect(() => {
+    if (authStore.token) {
+      navigate("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authStore.token]);
+
   return (
-    <Box bgColor="blue.400" h="100vh" pt={"5rem"}>
+    <Box bgColor="purple.400" h="100vh" pt={"5rem"}>
       <Box color="white" as="h1" textAlign={"center"}>
         <Text layerStyle={LayerStyleToken.HEADING} mb=".5rem">
           Login!
@@ -50,7 +67,7 @@ function LoginPage() {
             mt="2rem"
             alignItems={"center"}
           >
-            <Button type="submit" colorScheme="orange">
+            <Button isLoading={loading} type="submit" colorScheme="orange">
               Submit!
             </Button>
             <AppLink to="/auth/signup" color="blue">
@@ -63,4 +80,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default observer(LoginPage);
