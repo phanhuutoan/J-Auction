@@ -1,6 +1,6 @@
 ## How to run this app with one command ㋡ ㋡ ?:
-1. It's deadly simple. You need to install docker (can see docker link [here](docs/Backend-instruction.md))
-2. And run `yarn start:all` and done!
+1. It's deadly simple. You need to install and run docker first (can see docker link [here](docs/Backend-instruction.md))
+2. And run `yarn start:all`, that's it!
 
 ## 1. Project scope and proposal
 ### 1.1 Project stack
@@ -37,3 +37,14 @@ Please read [Backend instructon: docs/Backend-instruction.md](docs/Backend-instr
 ---
 
 ### 1.6 Frontend overal architecture
+1. In Frontend I use singleton service pattern and mobx to manage our app store, below is [the diagram](https://drive.google.com/file/d/1hNYONmpp5uV4Jp5jp5-dmzBPPjP63Mh6/view?usp=sharing) 
+2. Image: 
+<img src="images/fe-overal.png">
+
+### 1.7 Frontend detail architecture
+1. I will explain the complicated parts of our app, **the auction system**, via the [detail diagram](https://drive.google.com/file/d/1hNYONmpp5uV4Jp5jp5-dmzBPPjP63Mh6/view?usp=sharing).
+2. Image:
+<img src="images/fe-detail.png">
+
+### 1.8 Frontend setup locally
+Please read [Frontend instructon: docs/Frontend-instruction.md](docs/Backend-instruction.md)

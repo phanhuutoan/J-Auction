@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"tony2@gmail.com\",\r\n    \"password\": \"Toan1234\"\r\n}",
+							"raw": "{\r\n    \"email\": \"tony@gmail.com\",\r\n    \"password\": \"Toan1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -135,6 +135,46 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get currentUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"balance\": 200\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/user",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -158,7 +198,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"A Teaspoon 22\",\r\n    \"body\": \"tea from micheal Mr Tommy 15\",\r\n    \"timeWindow\": 2\r\n}",
+							"raw": "{\r\n    \"title\": \"A Fan 3\",\r\n    \"body\": \"tea from micheal Mr Tommy\",\r\n    \"timeWindow\": 2,\r\n    \"startPrice\": 100\r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -210,44 +250,6 @@
 				},
 				{
 					"name": "start bid",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"bidItemId\": 10,\r\n    \"createdById\": 3,\r\n    \"timeWindow\": 2\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{url}}/bid/start",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"bid",
-								"start"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get bid list on item",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -271,93 +273,25 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{url}}/bid/28/list",
+							"raw": "http://{{url}}/bid/start/85",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"bid",
-								"28",
-								"list"
+								"start",
+								"85"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Auction bid",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"price\": 200\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{url}}/bid/28",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"bid",
-								"28"
-							]
-						}
+					"name": "get bid Items",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
 					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "bids Copy",
-			"item": [
-				{
-					"name": "create bid item",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"A Teaspoon 22\",\r\n    \"body\": \"tea from micheal Mr Tommy 15\",\r\n    \"timeWindow\": 2\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{url}}/bid/create",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"bid",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "my bid items",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -371,22 +305,37 @@
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://{{url}}/user/bid-items",
+							"raw": "http://{{url}}/bid/list?state=ongoing",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"user",
-								"bid-items"
+								"bid",
+								"list"
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "ongoing"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "start bid",
+					"name": "Auction bid",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -402,7 +351,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"bidItemId\": 10,\r\n    \"createdById\": 3,\r\n    \"timeWindow\": 2\r\n}",
+							"raw": "{\r\n    \"price\": 400\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -410,54 +359,24 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{url}}/bid/start",
+							"raw": "http://{{url}}/bid/31",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"bid",
-								"start"
+								"31"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "bid on auction",
+					"name": "List item from auction",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"price\": 750\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://{{url}}/bid/28",
-							"protocol": "http",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"bid",
-								"28"
-							]
-						}
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
