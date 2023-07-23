@@ -76,6 +76,12 @@ export class BaseService {
       </ThemeProvider>
     );
 
+    console.log(err.response?.data.message);
+
+    if (err.response?.data.message === "Forbidden resource") {
+      sessionStorage.removeItem(STORAGE_KEY_TOKEN);
+      return;
+    }
     this.reactRoot = ReactDOM.createRoot(element);
     this.reactRoot.render(modal);
   }

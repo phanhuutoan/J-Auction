@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { CreateItemDTO } from "../models/DTOs";
-import { BidItem, CommonUpdateReturn, User } from "../models/model";
+import { CompletedBidItem, CommonUpdateReturn, User } from "../models/model";
 import { BaseService } from "./BaseService";
 
 export class UserService extends BaseService {
@@ -15,7 +15,7 @@ export class UserService extends BaseService {
   }
 
   getMyBidItem() {
-    return this.axiosRequest().get<BidItem[]>("/user/bid-items");
+    return this.axiosRequest().get<CompletedBidItem[]>("/user/bid-items");
   }
 
   startBidItem(bidItemId: number) {

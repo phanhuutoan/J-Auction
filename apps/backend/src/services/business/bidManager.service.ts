@@ -45,6 +45,9 @@ export class BidManagerService {
     );
 
     this.onGoingAuctionMap.set(id, auction);
+    await this.backupManagerService.preriodicallyBackup([
+      auction.getRawBackupData(),
+    ]);
   }
 
   async stopAuction(id: number) {
@@ -76,10 +79,21 @@ export class BidManagerService {
     auction.addHighestPrice(biddingUserId, price);
   }
 
+  /**
+   * return minutes remaining for an ongoing auction
+   * @param id bidItemId
+   * @returns string of minutes
+   */
   getRemainingTimeFromAuction(id: BidItemId) {
     const auction = this.getOngoingAuction(id);
 
     return auction.getRemainingTimes();
+  }
+
+  getCurrentWinner(id: BidItemId) {
+    const auction = this.getOngoingAuction(id);
+
+    return auction.currentWinner;
   }
 
   getAllOnGoingAuctions() {
@@ -135,7 +149,11 @@ export class BidManagerService {
     bidId: number,
   ) {
     await Promise.all([
-      this.bidItemService.updateWinner(bidId, currentWinner.userId),
+      this.bidItemService.updateWinner(
+        bidId,
+        currentWinner.userId,
+        currentWinner.highestPrice,
+      ),
       this.sendBackMoneyToLosedUser(losedUserIds, bidId),
       this.stopAuction(bidId),
     ]);

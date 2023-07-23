@@ -1,63 +1,106 @@
-import { Box, Button, Container, Flex, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import CommonLayout from "../ui-components/Layouts";
-import { CommonEnum } from "../common/constant";
 import GridHeader from "../ui-components/grids-item/GridHeader";
 import GridRow from "../ui-components/grids-item/GridRow";
-import BidPriceModal from "../ui-components/modals/BidPriceModal";
-import { Link } from "react-router-dom";
-import React from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useGetStore } from "../stores-sdk";
+import { observer } from "mobx-react-lite";
+import { AuctionManager } from "../ui-components/auctions/AuctionManager";
+import { useCleanupHook as useComponentUnmount } from "../common/hooks/useCleanupHook";
+import { CheckIcon } from "@chakra-ui/icons";
 
 function HomePage() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const headersItem = ["Name", "Current price", "Duration", "Bid"];
-
-  function _onClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.preventDefault();
-    e.stopPropagation();
-    onOpen();
-  }
-  const rows: Array<[string, string, string, JSX.Element]> = [
-    [
-      "Item 1",
-      "$200",
-      "2.33",
-      <Button colorScheme="purple" minW={"5rem"} onClick={_onClick}>
-        Bid
-      </Button>,
-    ],
-    [
-      "Item 2",
-      "$200",
-      "2.44",
-      <Button colorScheme="purple" minW={"5rem"}>
-        Bid
-      </Button>,
-    ],
+  const { bidStore } = useGetStore();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const headersOngoingItems = [
+    "Id",
+    "Name",
+    "Current highest price",
+    "Remaining time",
+    "Actions",
   ];
+  const headerCompletedItems = [
+    "Id",
+    "Name",
+    "Highest price",
+    "Winner user",
+    "Finished date",
+  ];
+
+  useEffect(() => {
+    if (searchParams.get("state") === "completed") {
+      bidStore.getCompletedItem();
+    } else {
+      bidStore.getOngoingItems(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useComponentUnmount(() => {
+    bidStore.clearRealtimeUpdate();
+  });
+
+  function _onGoingClick() {
+    bidStore.getOngoingItems();
+
+    navigate("./?state=ongoing");
+  }
+
+  function _onCompletedClick() {
+    bidStore.getCompletedItem();
+
+    navigate("./?state=completed");
+  }
 
   return (
     <CommonLayout>
-      <Container maxW={CommonEnum.CONTAINER_WIDTH} mt="2rem">
-        <Flex>
-          <Button colorScheme="green" mr={4}>
-            Ongoing
-          </Button>
-          <Button colorScheme="yellow">Completed</Button>
-        </Flex>
+      <Container maxW={"75rem"} mt="2rem">
+        <Tabs defaultIndex={searchParams.get("state") === "completed" ? 1 : 0}>
+          <TabList>
+            <Tab onClick={_onGoingClick}>On-going</Tab>
+            <Tab onClick={_onCompletedClick}>Completed</Tab>
+          </TabList>
 
-        <Box>
-          <GridHeader items={headersItem} />
-          {rows.map((row) => (
-            <Link to={`/${1}/bids`}>
-              <GridRow key={row[0]} items={row} />
-            </Link>
-          ))}
-        </Box>
+          <TabPanels>
+            <TabPanel>
+              <Box>
+                <GridHeader items={headersOngoingItems} />
+                <AuctionManager
+                  listAuction={bidStore.onGoingBidItem}
+                  onBidPrice={bidStore.bidPrice.bind(bidStore)}
+                  onEndTime={bidStore.removeBidItemWhenEndTime.bind(bidStore)}
+                />
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <Box>
+                <GridHeader items={headerCompletedItems} />
+                {bidStore.completedBidItemRows.map((row) => (
+                  <Link to={`/${row[0]}/bids?state=completed`} key={row[0]}>
+                    <GridRow
+                      items={row}
+                      Icon={<CheckIcon />}
+                      iconBoxBg="red.700"
+                    />
+                  </Link>
+                ))}
+              </Box>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Container>
-
-      <BidPriceModal isOpen={isOpen} onClose={onClose} />
     </CommonLayout>
   );
 }
 
-export default HomePage;
+export default observer(HomePage);

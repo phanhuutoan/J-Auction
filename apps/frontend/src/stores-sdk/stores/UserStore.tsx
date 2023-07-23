@@ -1,7 +1,7 @@
 import { BidItemState, type User } from "../models/model";
 import { UserService } from "../services/userService";
 import { getService } from "../services/serviceSingleton";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Button } from "@chakra-ui/react";
 import { CreateItemDTO } from "../models/DTOs";
 
@@ -22,19 +22,25 @@ export class UserStore {
   async updateBalance(balance: number) {
     const resp = await this.userService.updateUserBalance(balance);
 
-    if (resp.data.status && this.currentUser) {
-      this.currentUser.balance = (
-        Number(this.currentUser.balance) + Number(balance)
-      ).toString();
+    if (resp.data.status) {
+      runInAction(() => {
+        if (this.currentUser) {
+          this.currentUser.balance = (
+            Number(this.currentUser.balance) + Number(balance)
+          ).toString();
+        }
+      });
     }
   }
 
-  async getCurrentUserData() {
-    if (!this.currentUser) {
+  async getCurrentUserData(forceUpdate?: boolean) {
+    if (!this.currentUser || forceUpdate) {
       const resp = await this.userService.getUserData();
 
       if (resp) {
-        this.currentUser = resp.data;
+        runInAction(() => {
+          this.currentUser = resp.data;
+        });
       }
     }
   }
@@ -56,7 +62,9 @@ export class UserStore {
         ] as BidItemRow;
       });
 
-    this.bidItemRows = rowData;
+    runInAction(() => {
+      this.bidItemRows = rowData;
+    });
   }
 
   async createBidItem(payload: CreateItemDTO) {

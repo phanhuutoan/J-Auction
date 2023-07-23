@@ -31,6 +31,7 @@ export class BidItemService {
           title,
           body,
           startPrice,
+          finalPrice: startPrice,
           createdBy() {
             return userId.toString();
           },
@@ -42,6 +43,9 @@ export class BidItemService {
   async getBidItems(whereOptions: FindOptionsWhere<BidItem>) {
     return this.bidItemRepo.find({
       where: whereOptions,
+      relations: {
+        winner: true,
+      },
     });
   }
 
@@ -64,11 +68,12 @@ export class BidItemService {
     });
   }
 
-  async updateWinner(bidItemId: number, userId: number) {
+  async updateWinner(bidItemId: number, userId: number, highestPrice: number) {
     if (!userId) {
       return;
     }
     await this.bidItemRepo.update(bidItemId, {
+      finalPrice: highestPrice,
       winner() {
         return userId.toString();
       },
@@ -81,6 +86,6 @@ export class BidItemService {
       relations: { bids: { user: true } },
     });
 
-    return bidItem.bids;
+    return bidItem;
   }
 }

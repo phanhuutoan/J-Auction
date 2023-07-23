@@ -6,6 +6,7 @@ import CreateItemPage from "../pages/CreateItem";
 import DepositPage from "../pages/Deposit";
 import AuctionDetails from "../pages/AuctionDetails";
 import Page404 from "../pages/others/404";
+import { rootStore } from "../stores-sdk";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,13 @@ const router = createBrowserRouter([
   {
     path: "/:bidItemId/bids",
     element: <AuctionDetails />,
+    loader: async ({ params }) => {
+      const { bidStore } = rootStore;
+      const id = Number(params.bidItemId);
+      const loadedData = await bidStore.getAuctionWithBid(id);
+
+      return loadedData;
+    },
   },
   {
     path: "*",

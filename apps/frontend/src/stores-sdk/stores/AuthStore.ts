@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { AuthService } from "../services/authService";
 import { getService } from "../services/serviceSingleton";
 import type { SigninDTO, SignupDTO } from "../models/DTOs";
@@ -19,7 +19,9 @@ export class AuthStore {
     const data = await this.authService.sendSigninRequest(signinPayload);
 
     if (data) {
-      this.token = data.token;
+      runInAction(() => {
+        this.token = data.token;
+      });
       this.saveToCache(data.token);
     }
   }
@@ -28,7 +30,9 @@ export class AuthStore {
     const data = await this.authService.sendSignupRequest(signupPayload);
 
     if (data) {
-      this.token = data.token;
+      runInAction(() => {
+        this.token = data.token;
+      });
       this.saveToCache(data.token);
     }
   }
@@ -37,12 +41,16 @@ export class AuthStore {
     const existingToken = this.restoreCache();
 
     if (existingToken) {
-      this.token = existingToken;
+      runInAction(() => {
+        this.token = existingToken;
+      });
     }
   }
 
   logout() {
-    this.token = undefined;
+    runInAction(() => {
+      this.token = undefined;
+    });
     this.clearCache();
   }
 

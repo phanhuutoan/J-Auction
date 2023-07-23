@@ -16,20 +16,21 @@ import { useForm } from "react-hook-form";
 interface BidPriceModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit?(data: BidPriceFormData): void;
 }
 
-type FormData = {
+export type BidPriceFormData = {
   price: number;
 };
 function BidPriceModal(props: BidPriceModalProps) {
-  const { isOpen, onClose } = props;
-  const { register, handleSubmit } = useForm<FormData>();
+  const { isOpen, onClose, onSubmit } = props;
+  const { register, handleSubmit } = useForm<BidPriceFormData>();
 
-  function _onSubmit(data: FormData) {
-    console.log("Data", data);
+  function _onSubmit(data: BidPriceFormData) {
+    onSubmit?.(data);
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Enter bid price</ModalHeader>

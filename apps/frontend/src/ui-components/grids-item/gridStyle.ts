@@ -10,9 +10,18 @@ export const gridStyles = defineStyle({
     transition: "all .3s",
     alignItems: "center",
     cursor: "pointer",
+    pos: "relative",
     _hover: {
       transform: "translateY(-3px)",
       boxShadow: "md",
     },
+  },
+
+  icon: {
+    borderRadius: "50%",
+    boxSize: "1.5rem",
+    pos: "absolute",
+    top: "-.5rem",
+    left: "-.5rem",
   },
 });

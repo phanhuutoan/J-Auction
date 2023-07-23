@@ -31,10 +31,24 @@ export class BidControllerService {
     });
   }
 
-  getOngoingBidItem() {
-    return this.bidItemService.getBidItems({
+  async getOngoingBidItem() {
+    const bidItems = await this.bidItemService.getBidItems({
       state: BidItemStateEnum.ONGOING,
     });
+    const bidItemsAndRemainingTime = bidItems.map((item) => {
+      const remainingTime = this.bidManagerService.getRemainingTimeFromAuction(
+        item.id,
+      );
+      const currentWinner = this.bidManagerService.getCurrentWinner(item.id);
+
+      return {
+        ...item,
+        remainingTime,
+        currentWinner,
+      };
+    });
+
+    return bidItemsAndRemainingTime;
   }
 
   async updateStateOfBidItem(
@@ -94,7 +108,18 @@ export class BidControllerService {
   }
 
   async getBidListFromItem(bidItemId: BidItemId) {
-    return this.bidItemService.getBidListOnBidItem(bidItemId);
+    const data = await this.bidItemService.getBidListOnBidItem(bidItemId);
+    let remainingTime = null;
+
+    if (data.state === BidItemStateEnum.ONGOING) {
+      remainingTime =
+        this.bidManagerService.getRemainingTimeFromAuction(bidItemId);
+    }
+
+    return {
+      ...data,
+      remainingTimeInMinutes: remainingTime,
+    };
   }
 
   private async deductUserBalance(bidInput: BidInputData) {

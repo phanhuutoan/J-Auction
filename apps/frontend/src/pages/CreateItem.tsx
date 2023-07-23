@@ -9,6 +9,7 @@ import CreateItemModal, {
 import { useGetStore } from "../stores-sdk";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
+import { BidIconUser } from "../ui-components/icons/bidIcon";
 
 function CreateItemPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,7 +21,7 @@ function CreateItemPage() {
     "state",
     "time window",
     "started price",
-    "Publish",
+    "Actions",
   ];
 
   function _onCreateItem(data: CreateItemFormData) {
@@ -48,7 +49,12 @@ function CreateItemPage() {
           <Box>
             <GridHeader items={headersItem} />
             {userStore.bidItemRows.map((row) => (
-              <GridRow key={row[0]} items={row} />
+              <GridRow
+                key={row[0]}
+                items={row}
+                Icon={<BidIconUser fill={"white"} />}
+                iconBoxBg="purple.500"
+              />
             ))}
           </Box>
         </Container>

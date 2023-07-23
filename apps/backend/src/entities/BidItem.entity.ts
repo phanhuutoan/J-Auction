@@ -20,6 +20,9 @@ export class BidItem extends BaseEntity {
   @Column({ type: 'numeric', default: 0 })
   startPrice: number;
 
+  @Column({ type: 'numeric', default: 0 })
+  finalPrice: number;
+
   @Column({
     type: 'enum',
     enum: ['ongoing', 'private', 'completed'],

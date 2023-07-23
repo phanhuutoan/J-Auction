@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UseGuards,
   UsePipes,
@@ -82,6 +83,16 @@ export class BidController {
       status: ActionResultState.BID_AUCTION_SUCCESS,
       price: data.price,
     };
+  }
+
+  @Get('/list')
+  @UseGuards(AuthGuard)
+  async getListItems(@Query('state') state: BidItemStateEnum) {
+    if (state === BidItemStateEnum.COMPLETED) {
+      return this.bidControllerService.getCompletedBidItem();
+    } else if (state === BidItemStateEnum.ONGOING) {
+      return this.bidControllerService.getOngoingBidItem();
+    }
   }
 
   @Get('/:bidItemId/list')
