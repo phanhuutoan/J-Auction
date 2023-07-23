@@ -59,7 +59,7 @@ function SignupPage() {
           </FormControl>
           <FormControl mt="1rem">
             <FormLabel>Name</FormLabel>
-            <Input type="name" {...register("userName")} required />
+            <Input type="text" {...register("userName")} required />
           </FormControl>
           <FormControl mt="1rem">
             <FormLabel>Password</FormLabel>

@@ -41,7 +41,12 @@ function CreateItemPage() {
       <Box>
         <Container maxW={CommonEnum.CONTAINER_WIDTH} mt="2rem">
           <Flex>
-            <Button colorScheme="purple" minW={"5rem"} onClick={onOpen}>
+            <Button
+              data-testid="CREATE_NEW_BTN"
+              colorScheme="purple"
+              minW={"5rem"}
+              onClick={onOpen}
+            >
               Create new item
             </Button>
           </Flex>
@@ -50,6 +55,7 @@ function CreateItemPage() {
             <GridHeader items={headersItem} />
             {userStore.bidItemRows.map((row) => (
               <GridRow
+                data-testid={`MY_BID_ITEM`}
                 key={row[0]}
                 items={row}
                 Icon={<BidIconUser fill={"white"} />}

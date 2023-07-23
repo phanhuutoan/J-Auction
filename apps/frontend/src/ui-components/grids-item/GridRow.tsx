@@ -17,7 +17,7 @@ interface GridRowProps extends SimpleGridProps {
 }
 
 function GridRow(props: GridRowProps) {
-  const { items, Icon, iconBoxBg } = props;
+  const { items, Icon, iconBoxBg, ...rest } = props;
   const IconClone = React.cloneElement<IconProps>(Icon || <BellIcon />, {
     color: "white",
     boxSize: ".9rem",
@@ -26,7 +26,7 @@ function GridRow(props: GridRowProps) {
     <SimpleGrid
       gridTemplateColumns={`repeat(${items.length}, 1fr)`}
       sx={gridStyles.row}
-      {...props}
+      {...rest}
     >
       {items.map((item) => (
         <GridItem key={items.indexOf(item)}>

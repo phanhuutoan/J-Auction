@@ -120,7 +120,7 @@ describe('Bid Manager Service (BidManagerService)', () => {
   });
 
   it('should start an auction with true behavior', async () => {
-    await testingService.startAution(10, 5);
+    await testingService.startAution(10, 5, 0);
 
     expect(bidItemServiceMock.updateBidItem).toHaveBeenCalledWith(10, {
       state: BidItemStateEnum.ONGOING,
@@ -168,7 +168,11 @@ describe('Bid Manager Service (BidManagerService)', () => {
   it('should update winner and send money back to losed user when an auction end.', async () => {
     // ending auction 1
     jest.advanceTimersByTime(2.8 * 1000 * 60);
-    await expect(bidItemServiceMock.updateWinner).toHaveBeenCalledWith(1, 1);
+    await expect(bidItemServiceMock.updateWinner).toHaveBeenCalledWith(
+      1,
+      1,
+      200,
+    );
     await expect(
       bidServiceMock.getMoneyLosedUserBidInAuction,
     ).toHaveBeenCalled();

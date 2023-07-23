@@ -1,10 +1,4 @@
-import { AuthService } from "./authService";
-
 export type IParameterClass<T> = { new (...args: any[]): T };
-
-export const serviceSingleton = {
-  authService: new AuthService(),
-};
 
 const serviceRegistry = new Map<string, any>();
 

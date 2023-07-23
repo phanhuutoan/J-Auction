@@ -1,0 +1,10 @@
+FROM node:18.12.1
+
+WORKDIR /home/app
+COPY yarn.lock .
+COPY apps/frontend/package.json ./apps/frontend/package.json
+RUN yarn install
+
+COPY . .
+
+CMD [ "yarn", "start:fe" ]

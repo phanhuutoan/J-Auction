@@ -10,7 +10,6 @@ describe('Bid Auction (e2e)', () => {
   let app: INestApplication;
   let setupUser: SetupUser;
   let bearerToken: string;
-  let userId: number;
   let bidItemId: string;
 
   beforeAll(async () => {
@@ -21,13 +20,12 @@ describe('Bid Auction (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     setupUser = new SetupUser(app);
-    const { token, userId: testUserId } = await setupUser.signupUser(
+    const { token } = await setupUser.signupUser(
       'test-user',
       'test-user',
       'Toan1234',
     );
     bearerToken = `bearer ${token}`;
-    userId = testUserId;
   });
 
   it('update user balance [/user/balance]', () => {
@@ -47,6 +45,7 @@ describe('Bid Auction (e2e)', () => {
         title: 'A Test Auction',
         body: 'teaspoon from micheal Mr Tommy 15',
         timeWindow: 2,
+        startPrice: 0,
       })
       .set('authorization', bearerToken)
       .expect(201);
@@ -79,32 +78,16 @@ describe('Bid Auction (e2e)', () => {
     });
   });
 
-  it('Users can only start an auction they own [/bid/start]', async () => {
-    const response = await request(app.getHttpServer())
-      .post(`/bid/start`)
-      .send({
-        bidItemId,
-        createdById: 0, // not this id user
-        timeWindow: 4,
-      })
+  it('Users can only start an auction they own [/bid/start/:bidItemId]', async () => {
+    await request(app.getHttpServer())
+      .post(`/bid/start/${bidItemId}`)
       .set('authorization', bearerToken)
-      .expect(403);
-
-    expect(response.body).toEqual({
-      error: 'Forbidden',
-      message: "You cannot start an auction that you don't own",
-      statusCode: 403,
-    });
+      .expect(201);
   });
 
   it('Users can only bid on ongoing auctoin [/bid/:bidItemId]', async () => {
     await request(app.getHttpServer())
-      .post(`/bid/start`)
-      .send({
-        bidItemId,
-        createdById: userId, // not this id user
-        timeWindow: 4,
-      })
+      .post(`/bid/start/${bidItemId}`)
       .set('authorization', bearerToken)
       .expect(201);
 

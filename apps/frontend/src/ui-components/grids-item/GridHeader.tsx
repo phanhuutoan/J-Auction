@@ -12,13 +12,13 @@ interface GridHeaderProps extends SimpleGridProps {
 }
 
 function GridHeader(props: GridHeaderProps) {
-  const { items } = props;
+  const { items, ...rest } = props;
   return (
     <Fragment>
       <SimpleGrid
         gridTemplateColumns={`repeat(${items.length}, 1fr)`}
         p="1.5rem"
-        {...props}
+        {...rest}
       >
         {items.map((item) => (
           <GridItem key={item}>

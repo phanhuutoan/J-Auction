@@ -11,15 +11,15 @@ DB_HOST=localhost
 DB_PORT=5432
 JWT_SECRET=jsonscret
 ```
+- Create .env file and add it to `apps/backend/.env`
 #### 3. Running Database, I use posgreSQL:
-- Use: `cd apps/backend`
-- Run: `docker-compose up`
+- Run: `yarn start:db`, this command will you docker-compose to build up your BD.
 - Database is now can access via **localhost:5432** and admin board can access via  **localhost:8080**
 
 #### 4. Setup and run locally
 I recommend using **NodeJS 18.x**
 - Use yarn: `yarn install`
-- After installing dependencies use: `yarn start:dev`
+- After installing dependencies use: `yarn start:be`
 - You may see something like this:
 - <img src="../images/Be-run-properly.png" />
 - You can now access api via: **localhost:5050**
@@ -28,7 +28,7 @@ I recommend using **NodeJS 18.x**
 #### 5. About Unit test:
 - Writing all unit test for this project may take a lot of time, so I choose one of complicated service to write UT (BidManagerService - for demo purpose): `apps/backend/src/services/business/bidManager.service.ts`
 - Check the UT file here: [bidManagerSpec file](__tests__/bidManager.service.spec.ts)
-- To run UT use `yarn test`
+- To run UT use `yarn test:ut-be`
 - Result: <img src="../images/UT.png" />
 
 
@@ -38,5 +38,5 @@ I recommend using **NodeJS 18.x**
 - `apps/backend/test/app.e2e-spec.ts`: test app /healthz
 - `apps/backend/test/auction-smoke.e2e-spec.ts`: test our app auctions system behavior. 
 - Writing all of #p1 #p2 case by E2E may take huge time, so I choose complicated behavior to demo. 
-- To run E2E use: `yarn test:e2e`, it requires you run the database on **step 3**
+- To run E2E use: `yarn test:e2e-be`, it requires you run the database on **step 3**
 - Result: <img src="../images/E2E.png" /> You can entirely ignore the console error.

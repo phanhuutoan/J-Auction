@@ -1,0 +1,47 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.fe
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_API_HOST=localhost:5000
+    volumes:
+      - ./apps/frontend/src/:/home/app/apps/frontend/src
+      - /home/app/node_modules
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.be
+    ports:
+      - 5000:5000
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - JWT_SECRET=jsonscret
+    volumes:
+      - ./apps/backend/src/:/home/app/apps/backend/src
+      - /home/app/node_modules
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

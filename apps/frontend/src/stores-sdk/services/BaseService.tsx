@@ -95,14 +95,12 @@ export class BaseService {
   }
 
   protected axiosRequest(
-    token?: string,
     errorHandler?: (err: AxiosError<ErrorPayload>) => void
   ) {
     const cachedToken = sessionStorage.getItem(STORAGE_KEY_TOKEN);
-    if (token || cachedToken) {
-      const bearerToken = token ? token : cachedToken;
+    if (cachedToken) {
       this.apiInstance.defaults.headers["Authorization"] =
-        "Bearer " + bearerToken;
+        "Bearer " + cachedToken;
     }
 
     if (errorHandler) {

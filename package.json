@@ -1,9 +1,20 @@
 {
-  "name": "jitera-test",
+  "name": "auction-home-work",
   "version": "1.0.0",
   "description": "jitera assignment challenge",
   "main": "index.js",
   "license": "MIT",
   "private": true,
-  "workspaces": ["apps/*"]
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "start:be": "yarn workspace @auction/backend start:dev",
+    "test:ut-be": "yarn workspace @auction/backend test",
+    "test:e2e-be": "yarn workspace @auction/backend test:e2e",
+    "start:fe": "yarn workspace @auction/frontend start",
+    "test:ut-fe": "yarn workspace @auction/frontend test",
+    "test:e2e-fe": "yarn workspace @auction/frontend playwright test --project=chromium",
+    "start:db": "docker-compose -f apps/backend/docker-compose.yml up",
+    "stop:db": "docker-compose -f apps/backend/docker-compose.yml down",
+    "start:all": "docker-compose up"
+  }
 }

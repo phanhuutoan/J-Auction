@@ -8,7 +8,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { loginStyle } from "./styles";
-import {} from "../../";
 import { LayerStyleToken } from "../../themes/tokens";
 import { useForm } from "react-hook-form";
 import AppLink from "../../ui-components/AppLink";
@@ -59,12 +58,17 @@ function LoginPage() {
       <Box sx={loginStyle.root}>
         <form onSubmit={handleSubmit(_onSubmit)}>
           <FormControl>
-            <FormLabel>Email address</FormLabel>
+            <FormLabel role="label">Email address</FormLabel>
             <Input type="email" {...register("email")} required />
           </FormControl>
           <FormControl mt="1rem">
-            <FormLabel>Password</FormLabel>
-            <Input type="password" {...register("password")} required />
+            <FormLabel role="label">Password</FormLabel>
+            <Input
+              role="textbox"
+              type="password"
+              {...register("password")}
+              required
+            />
           </FormControl>
           <Flex
             justifyContent={"space-between"}

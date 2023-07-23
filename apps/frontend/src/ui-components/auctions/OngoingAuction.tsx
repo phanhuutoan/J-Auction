@@ -53,6 +53,7 @@ function OngoingAuctionRow(props: OngoingAuctionProps) {
     <Box>
       <Link to={`/${row[0]}/bids?state=ongoing`}>
         <GridRow
+          data-testid="ONGOING_AUCTION"
           key={row[0] as number}
           items={row}
           Icon={<RepeatClockIcon />}

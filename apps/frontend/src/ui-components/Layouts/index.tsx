@@ -27,6 +27,8 @@ function CommonLayout(props: CommonLayoutProps) {
     authStore.autoSignin();
     if (authStore.token) {
       userStore.getCurrentUserData();
+    } else {
+      navigate("/auth/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -56,7 +58,12 @@ function CommonLayout(props: CommonLayoutProps) {
           </Box>
           <Menu>
             <MenuButton>
-              <Avatar cursor={"pointer"} src={avatarSrc} size={"md"} />
+              <Avatar
+                data-testid="AVATAR"
+                cursor={"pointer"}
+                src={avatarSrc}
+                size={"md"}
+              />
             </MenuButton>
             <MenuList color={"black"}>
               <Link to="/">
