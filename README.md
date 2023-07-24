@@ -48,3 +48,16 @@ Please read [Backend instructon: docs/Backend-instruction.md](docs/Backend-instr
 
 ### 1.8 Frontend setup locally
 Please read [Frontend instructon: docs/Frontend-instruction.md](docs/Frontend-instruction.md)
+
+## Video demonstration
+1. Intro
+
+https://github.com/phanhuutoan/J-Auction/assets/73571447/af1682a1-25dd-410b-adfc-34910672bb98
+
+2. Demo
+https://youtu.be/X8fW8lg2T4s
+
+
+
+
+
