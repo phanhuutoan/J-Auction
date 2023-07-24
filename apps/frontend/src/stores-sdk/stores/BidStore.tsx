@@ -62,7 +62,7 @@ export class BidStore {
     }
   }
 
-  async clearRealtimeUpdate() {
+  clearRealtimeUpdate() {
     clearInterval(this.timer);
   }
 

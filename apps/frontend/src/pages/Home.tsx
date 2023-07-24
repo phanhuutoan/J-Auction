@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { useGetStore } from "../stores-sdk";
 import { observer } from "mobx-react-lite";
 import { AuctionManager } from "../ui-components/auctions/AuctionManager";
-import { useCleanupHook as useComponentUnmount } from "../common/hooks/useCleanupHook";
+import { useComponentUnmount } from "../common/hooks/useCleanupHook";
 import { CheckIcon } from "@chakra-ui/icons";
 
 function HomePage() {

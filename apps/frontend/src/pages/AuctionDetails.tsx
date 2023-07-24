@@ -16,7 +16,7 @@ import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { BidItemState, LoaderData } from "../stores-sdk/models/model";
 import { useRemainingTime } from "../common/hooks/useRemainingTime";
 import moment from "moment";
-import { useCleanupHook } from "../common/hooks/useCleanupHook";
+import { useComponentUnmount } from "../common/hooks/useCleanupHook";
 import { useEffect, useState } from "react";
 import { useGetStore } from "../stores-sdk";
 import { BidIcon } from "../ui-components/icons/bidIcon";
@@ -48,7 +48,7 @@ function AuctionDetails() {
     }, DELAY_TIME_POLLING);
   }, []);
 
-  useCleanupHook(() => {
+  useComponentUnmount(() => {
     clearTimeout(timeout);
     clearInterval(pollingTimer);
   });

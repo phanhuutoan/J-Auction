@@ -47,4 +47,4 @@ Please read [Backend instructon: docs/Backend-instruction.md](docs/Backend-instr
 <img src="images/fe-detail.png">
 
 ### 1.8 Frontend setup locally
-Please read [Frontend instructon: docs/Frontend-instruction.md](docs/Backend-instruction.md)
+Please read [Frontend instructon: docs/Frontend-instruction.md](docs/Frontend-instruction.md)
