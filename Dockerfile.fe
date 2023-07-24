@@ -6,5 +6,6 @@ COPY apps/frontend/package.json ./apps/frontend/package.json
 RUN yarn install
 
 COPY . .
+RUN npm i -g react-scripts
 
 CMD [ "yarn", "start:fe" ]

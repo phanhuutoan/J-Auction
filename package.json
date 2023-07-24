@@ -8,6 +8,7 @@
   "workspaces": ["apps/*"],
   "scripts": {
     "start:be": "yarn workspace @auction/backend start:dev",
+    "start:be-prod": "yarn workspace @auction/backend start",
     "test:ut-be": "yarn workspace @auction/backend test",
     "test:e2e-be": "yarn workspace @auction/backend test:e2e",
     "start:fe": "yarn workspace @auction/frontend start",

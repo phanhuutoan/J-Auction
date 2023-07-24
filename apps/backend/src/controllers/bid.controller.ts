@@ -77,7 +77,7 @@ export class BidController {
     await this.bidControllerService.createBidOnAuction({
       bidItemId,
       biddingUserId,
-      price: data.price,
+      price: Number(data.price),
     });
     return {
       status: ActionResultState.BID_AUCTION_SUCCESS,

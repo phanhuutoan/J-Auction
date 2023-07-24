@@ -1,6 +1,6 @@
 ## How to run this app with one command ㋡ ㋡ ?:
 1. It's deadly simple. You need to install and run docker first (can see docker link [here](docs/Backend-instruction.md))
-2. And run `yarn start:all`, that's it!
+2. And run `yarn start:all` or `docker compose up`, that's it!
 
 ## 1. Project scope and proposal
 ### 1.1 Project stack
@@ -21,7 +21,7 @@
 2. Diagrams:
 <img src="images/BE-overal.png">
 
-### 1.4 Backend detail architecture
+### 1.4 Backend detailed architecture
 The architecture of other parts are easy to understand so I will show the core part of our app: **Auction system**
 1. Patterns using: Repository pattern, Dependency Injection, factory pattern.
 2. Architecture of auction system: [diagram link](https://drive.google.com/file/d/1BkFiQJYe7gBx9fIgntwrFPdf5YmuH_aC/view?usp=sharing)
@@ -41,7 +41,7 @@ Please read [Backend instructon: docs/Backend-instruction.md](docs/Backend-instr
 2. Image: 
 <img src="images/fe-overal.png">
 
-### 1.7 Frontend detail architecture
+### 1.7 Frontend detailed architecture
 1. I will explain the complicated parts of our app, **the auction system**, via the [detail diagram](https://drive.google.com/file/d/1hNYONmpp5uV4Jp5jp5-dmzBPPjP63Mh6/view?usp=sharing).
 2. Image:
 <img src="images/fe-detail.png">

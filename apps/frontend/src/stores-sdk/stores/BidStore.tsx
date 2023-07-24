@@ -64,6 +64,7 @@ export class BidStore {
 
   clearRealtimeUpdate() {
     clearInterval(this.timer);
+    this.timer = undefined;
   }
 
   private async updateOngoingItems() {
@@ -97,14 +98,13 @@ export class BidStore {
         (item) => item.id === itemId
       );
 
+      await this.userStore.getCurrentUserData(true);
       if (updatedBidItem) {
         updatedBidItem.currentHighestPrice = price;
 
         runInAction(() => {
           this.onGoingBidItem = [...this.onGoingBidItem];
         });
-        // update current user data
-        this.userStore.getCurrentUserData(true);
       }
     }
   }

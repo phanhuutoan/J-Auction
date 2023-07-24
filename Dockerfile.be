@@ -7,4 +7,4 @@ RUN yarn install
 
 COPY . .
 
-CMD [ "yarn", "start:be" ]
+CMD [ "yarn", "start:be-prod" ]

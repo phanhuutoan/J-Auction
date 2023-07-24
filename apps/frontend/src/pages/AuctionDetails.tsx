@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Button,
@@ -17,9 +16,10 @@ import { BidItemState, LoaderData } from "../stores-sdk/models/model";
 import { useRemainingTime } from "../common/hooks/useRemainingTime";
 import moment from "moment";
 import { useComponentUnmount } from "../common/hooks/useCleanupHook";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetStore } from "../stores-sdk";
 import { BidIcon } from "../ui-components/icons/bidIcon";
+import { observer } from "mobx-react-lite";
 
 const DELAY_TIME_POLLING = 5000; // 5s
 
@@ -32,25 +32,31 @@ function AuctionDetails() {
   const headersItem = ["id", "Name", "Email", "Bid price", "Bid date"];
 
   const [bids, setBids] = useState(initialBids);
+  const pollingInterval = useRef<any>()
+  const timeout = useRef<any>()
 
-  let timeout: NodeJS.Timeout;
-  let pollingTimer: NodeJS.Timer;
+  const isCompleted = bidItemInfo.state === BidItemState.COMPLETED;
 
   useEffect(() => {
     if (bidItemInfo.remainingTimeInMinutes !== null) {
-      timeout = setTimeout(() => {
-        navigate("/?state=complete");
+      timeout.current = setTimeout(() => {
+        timeout.current && navigate("/?state=completed");
       }, Number(bidItemInfo.remainingTimeInMinutes) * 1000 * 60);
     }
 
-    pollingTimer = setInterval(() => {
-      _updateBid();
-    }, DELAY_TIME_POLLING);
+    if (!isCompleted) {
+      pollingInterval.current = setInterval(() => {
+        pollingInterval.current && _updateBid();
+      }, DELAY_TIME_POLLING);
+    }
+
   }, []);
 
   useComponentUnmount(() => {
-    clearTimeout(timeout);
-    clearInterval(pollingTimer);
+    clearTimeout(timeout.current);
+    clearInterval(pollingInterval.current);
+    timeout.current = undefined;
+    pollingInterval.current = undefined
   });
 
   const { formatStr } = useRemainingTime(
@@ -76,7 +82,7 @@ function AuctionDetails() {
     });
   }
 
-  function _submitBidStore(price: number) {
+  function _submitPrice(price: number) {
     if (bidItemId) {
       bidStore.bidPrice(Number(bidItemId), price).then(() => {
         _updateBid();
@@ -84,7 +90,6 @@ function AuctionDetails() {
     }
   }
 
-  const isCompleted = bidItemInfo.state === BidItemState.COMPLETED;
   return (
     <CommonLayout>
       <Box>
@@ -135,11 +140,11 @@ function AuctionDetails() {
         <BidPriceModal
           isOpen={isOpen}
           onClose={onClose}
-          onSubmit={(data) => _submitBidStore(data.price)}
+          onSubmit={(data) => _submitPrice(data.price)}
         />
       </Box>
     </CommonLayout>
   );
 }
 
-export default AuctionDetails;
+export default observer(AuctionDetails);

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 
 /**
@@ -5,8 +6,8 @@ import { useEffect } from "react";
  * @param callback callback function
  */
 export const useComponentUnmount = (callback: () => void) => {
+  let first = 0;
   useEffect(() => {
-    let first = 0;
     return () => {
       if (first === 1) {
         callback();
@@ -14,6 +15,5 @@ export const useComponentUnmount = (callback: () => void) => {
         first = 1;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

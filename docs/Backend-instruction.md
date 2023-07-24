@@ -13,7 +13,7 @@ JWT_SECRET=jsonscret
 ```
 - Create .env file and add it to `apps/backend/.env`
 #### 3. Running Database, I use posgreSQL:
-- Run: `yarn start:db`, this command will you docker-compose to build up your BD.
+- Run: `yarn start:db`, this command will use docker-compose to build up your database.
 - Database is now can access via **localhost:5432** and admin board can access via  **localhost:8080**
 
 #### 4. Setup and run locally
