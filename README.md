@@ -1,3 +1,5 @@
+<h1>Jitera recruitment homework</h1>
+
 ## How to run this app with one command ㋡ ㋡ ?:
 1. It's deadly simple. You need to install and run docker first (can see docker link [here](docs/Backend-instruction.md))
 2. And run `yarn start:all` or `docker compose up`, that's it!
